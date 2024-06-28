@@ -30,18 +30,15 @@ class CollideableSprite(Sprite):
         self.hitbox_rect = self.rect.inflate(-shrink[0], -shrink[1])
 
 
-class Plant(CollideableSprite):
+class Plant(Sprite):
     def __init__(self, seed_type, groups, soil_sprite, frames, check_watered):
-        super().__init__(soil_sprite.rect.center, frames[0], groups, (0, 0), LAYERS['plant'])
+        super().__init__(soil_sprite.rect.center, frames[0], groups, LAYERS['plant'])
         self.rect.center = soil_sprite.rect.center + pygame.Vector2(0.5, -3) * SCALE_FACTOR
         self.soil = soil_sprite
         self.check_watered = check_watered
         self.frames = frames
-        self.hitbox = None
-
-        self.seed_type = seed_type
-        print(self.seed_type)
         self.age = 0
+        self.days_without_water = 0
         self.max_age = len(self.frames) - 1
         self.grow_speed = GROW_SPEED[seed_type]
         self.harvestable = False
@@ -51,8 +48,7 @@ class Plant(CollideableSprite):
             self.age += self.grow_speed
 
             if int(self.age) > 0:
-                self.z = LAYERS['main']
-                self.hitbox = self.rect.inflate(-26, -self.rect.height * 0.4)
+                self.z = LAYERS['plant']
 
             if self.age >= self.max_age:
                 self.age = self.max_age
@@ -60,6 +56,9 @@ class Plant(CollideableSprite):
 
             self.image = self.frames[int(self.age)]
             self.rect = self.image.get_frect(midbottom=self.soil.rect.midbottom + pygame.math.Vector2(0, 2))
+            self.days_without_water = 0
+        else:
+            self.days_without_water += 1
 
 
 class Tree(CollideableSprite):

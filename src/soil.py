@@ -69,17 +69,17 @@ class SoilLayer:
     def plant_seed(self, pos, seed, plant_sound):
         for soil_sprite in self.soil_sprites.sprites():
             if soil_sprite.rect.collidepoint(pos):
-
                 x = int(soil_sprite.rect.x / (TILE_SIZE * SCALE_FACTOR))
                 y = int(soil_sprite.rect.y / (TILE_SIZE * SCALE_FACTOR))
-
                 if 'P' not in self.grid[y][x]:
                     self.grid[y][x].append('P')
-                    Plant(seed, [self.all_sprites, self.plant_sprites, self.collision_sprites], soil_sprite, self.level_frames[seed], self.check_watered)
+                    Plant(seed, [self.all_sprites, self.plant_sprites], soil_sprite, self.level_frames[seed], self.check_watered)
                     plant_sound.play()
     def update_plants(self):
         for plant in self.plant_sprites.sprites():
             plant.grow()
+            if plant.days_without_water >= 3:
+                plant.kill()
 
     def create_soil_tiles(self):
         self.soil_sprites.empty()
