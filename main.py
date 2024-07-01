@@ -60,6 +60,7 @@ class Game:
                     pause_menu.pressed_play = False
                 elif pause_menu.pressed_quit:
                     pause_menu.pressed_quit = False
+                    self.sounds["music"].stop()
                     self.running = False
                     self.main_menu.menu = True
                     self.level.entities["Player"].paused = False
